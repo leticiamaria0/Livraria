@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#4CAF50">
+    <title>Mercearia da Isa</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header com Logo -->
+        <header class="header">
+            <div class="logo-area">
+                <div class="logo-placeholder" id="logoPlaceholder">
+                    <i class="fas fa-store"></i>
+                    <span>Livraria</span>
+                </div>
+                <button class="edit-logo-btn" id="editLogoBtn" title="Alterar Logo">
+                    <i class="fas fa-camera"></i>
+                </button>
+                <input type="file" id="logoUpload" accept="image/*" style="display: none">
+            </div>
+            <div class="header-info">
+                <span id="currentDate"></span>
+                <button class="btn-install" id="installBtn" style="display: none;">
+                    <i class="fas fa-download"></i> Instalar App
+                </button>
+            </div>
+        </header>
+
+
+        <!-- Navegação Principal -->
+        <nav class="main-nav">
+            <button class="nav-btn active" data-page="vendas">
+                <i class="fas fa-cash-register"></i>
+                <span>Vendas</span>
+            </button>
+            <button class="nav-btn" data-page="estoque">
+                <i class="fas fa-boxes"></i>
+                <span>Estoque</span>
+            </button>
+            <button class="nav-btn" data-page="clientes">
+                <i class="fas fa-users"></i>
+                <span>Clientes</span>
+            </button>
+            <button class="nav-btn" data-page="fiado">
+                <i class="fas fa-hand-holding-usd"></i>
+                <span>Fiado</span>
+            </button>
+            <button class="nav-btn" data-page="relatorios">
+                <i class="fas fa-chart-line"></i>
+                <span>Relatórios</span>
+            </button>
+        </nav>
+
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <!-- Página de Vendas -->
+            <div class="page active" id="vendas-page">
+                <div class="vendas-container">
+                    <div class="venda-card">
+                        <h2><i class="fas fa-shopping-cart"></i> Nova Venda</h2>
+                       
+                        <div class="cliente-section">
+                            <label>Cliente:</label>
+                            <select id="clienteSelect">
+                                <option value="">Consumidor Final</option>
+                            </select>
+                            <button class="btn-small" id="novoClienteBtn">
+                                <i class="fas fa-plus"></i> Novo
+                            </button>
+                        </div>
+
+
+                        <div class="produtos-section">
+                            <h3>Produtos</h3>
+                            <div class="produto-input">
+                                <select id="produtoSelect">
+                                    <option value="">Selecione um produto</option>
+                                </select>
+                                <input type="number" id="quantidadeProduto" placeholder="Qtd" min="1" value="1">
+                                <button class="btn-add" id="addProdutoBtn">
+                                    <i class="fas fa-plus"></i> Adicionar
+                                </button>
+                            </div>
+
+
+                            <div class="carrinho-lista" id="carrinhoLista">
+                                <p class="empty-carrinho">Nenhum produto adicionado</p>
+                            </div>
+
+
+                            <div class="total-area">
+                                <span class="total-label">Total:</span>
+                                <span class="total-value" id="totalVenda">R$ 0,00</span>
+                            </div>
+
+
+                            <div class="venda-actions">
+                                <button class="btn-primary" id="finalizarVendaBtn">
+                                    <i class="fas fa-check"></i> Finalizar Venda
+                                </button>
+                                <button class="btn-secondary" id="limparCarrinhoBtn">
+                                    <i class="fas fa-trash"></i> Limpar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="ultimas-vendas">
+                        <h3><i class="fas fa-history"></i> Últimas Vendas</h3>
+                        <div id="ultimasVendasLista"></div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Página de Estoque -->
+            <div class="page" id="estoque-page">
+                <div class="estoque-header">
+                    <h2><i class="fas fa-boxes"></i> Controle de Estoque</h2>
+                    <button class="btn-primary" id="addProdutoModalBtn">
+                        <i class="fas fa-plus"></i> Novo Produto
+                    </button>
+                </div>
+
+
+                <div class="estoque-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-box"></i>
+                        <span class="stat-value" id="totalProdutos">0</span>
+                        <span class="stat-label">Produtos</span>
+                    </div>
+                    <div class="stat-card alerta">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span class="stat-value" id="produtosBaixo">0</span>
+                        <span class="stat-label">Estoque Baixo</span>
+                    </div>
+                </div>
+
+
+                <div class="filtros-estoque">
+                    <input type="text" id="buscaProduto" placeholder="Buscar produto...">
+                    <select id="filtroEstoque">
+                        <option value="todos">Todos</option>
+                        <option value="baixo">Estoque Baixo</option>
+                    </select>
+                </div>
+
+
+                <div class="tabela-estoque" id="tabelaEstoque">
+                    <table>
+                        <thead>
+                            <tr><th>Produto</th><th>Preço</th><th>Estoque</th><th>Ações</th></tr>
+                        </thead>
+                        <tbody id="estoqueBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <!-- Página de Clientes -->
+            <div class="page" id="clientes-page">
+                <div class="clientes-header">
+                    <h2><i class="fas fa-users"></i> Clientes</h2>
+                    <button class="btn-primary" id="addClienteModalBtn">
+                        <i class="fas fa-plus"></i> Novo Cliente
+                    </button>
+                </div>
+
+
+                <div class="filtros-clientes">
+                    <input type="text" id="buscaCliente" placeholder="Buscar cliente...">
+                </div>
+
+
+                <div class="cards-clientes" id="clientesCards"></div>
+            </div>
+
+
+            <!-- Página de Fiado -->
+            <div class="page" id="fiado-page">
+                <h2><i class="fas fa-hand-holding-usd"></i> Controle de Fiado</h2>
+               
+                <div class="fiado-resumo">
+                    <div class="fiado-total">
+                        <span>Total em Fiado:</span>
+                        <strong id="totalFiado">R$ 0,00</strong>
+                    </div>
+                </div>
+
+
+                <div class="lista-fiado" id="listaFiado"></div>
+            </div>
+
+
+            <!-- Página de Relatórios -->
+            <div class="page" id="relatorios-page">
+                <h2><i class="fas fa-chart-line"></i> Relatórios</h2>
+               
+                <div class="relatorios-filtros">
+                    <select id="periodoRelatorio">
+                        <option value="dia">Hoje</option>
+                        <option value="semana">Esta Semana</option>
+                        <option value="mes">Este Mês</option>
+                    </select>
+                    <button class="btn-primary" id="atualizarRelatorioBtn">
+                        <i class="fas fa-chart-simple"></i> Atualizar
+                    </button>
+                </div>
+
+
+                <div class="cards-relatorios">
+                    <div class="card-relatorio">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Vendas do Período</span>
+                        <strong id="totalVendasPeriodo">R$ 0,00</strong>
+                    </div>
+                    <div class="card-relatorio">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Produtos Mais Vendidos</span>
+                        <canvas id="graficoProdutos" width="300" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+
+        <!-- Modal Novo Produto -->
+        <div class="modal" id="produtoModal">
+            <div class="modal-content">
+                <h3>Novo Produto</h3>
+                <input type="text" id="produtoNome" placeholder="Nome do produto">
+                <input type="number" id="produtoPreco" placeholder="Preço" step="0.01">
+                <input type="number" id="produtoEstoque" placeholder="Estoque inicial">
+                <div class="modal-actions">
+                    <button class="btn-secondary" id="fecharProdutoModal">Cancelar</button>
+                    <button class="btn-primary" id="salvarProdutoBtn">Salvar</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal Novo Cliente -->
+        <div class="modal" id="clienteModal">
+            <div class="modal-content">
+                <h3>Novo Cliente</h3>
+                <input type="text" id="clienteNome" placeholder="Nome completo">
+                <input type="tel" id="clienteTelefone" placeholder="Telefone">
+                <input type="number" id="clienteLimite" placeholder="Limite de fiado" step="0.01">
+                <div class="modal-actions">
+                    <button class="btn-secondary" id="fecharClienteModal">Cancelar</button>
+                    <button class="btn-primary" id="salvarClienteBtn">Salvar</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal Pagamento Fiado -->
+        <div class="modal" id="pagamentoModal">
+            <div class="modal-content">
+                <h3>Receber Pagamento</h3>
+                <p>Cliente: <strong id="pagamentoClienteNome"></strong></p>
+                <p>Débito: <strong id="pagamentoDebito"></strong></p>
+                <input type="number" id="pagamentoValor" placeholder="Valor a receber" step="0.01">
+                <div class="modal-actions">
+                    <button class="btn-secondary" id="fecharPagamentoModal">Cancelar</button>
+                    <button class="btn-primary" id="confirmarPagamentoBtn">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
